@@ -1,0 +1,36 @@
+// Soil Moisture Monitoring and Automatic Irrigation Alert
+
+#define SOIL_SENSOR A5    // Analog pin connected to soil sensor output
+#define BUZZER 8         // Buzzer pin
+#define pump 7             // Optional: pump pin
+
+int moistureValue = 0;    // Variable to store sensor reading
+int threshold = 300;      // Change this value based on calibration
+
+void setup() {
+  Serial.begin(9600);     // Start serial monitor
+  pinMode(BUZZER, OUTPUT);
+  pinMode(pump, OUTPUT);
+  pinMode(SOIL_SENSOR, INPUT);
+  Serial.println("Soil Moisture Monitoring System Started...");
+}
+
+void loop() {
+  moistureValue = analogRead(SOIL_SENSOR);  // Read sensor value
+  Serial.print("Soil Moisture Value: ");
+  Serial.println(moistureValue);
+
+  if (moistureValue < threshold) {
+    // Soil is dry
+    digitalWrite(BUZZER, HIGH);
+    digitalWrite(pump, HIGH);
+    Serial.println("Soil is wet! no need to water!");
+  } else {
+    // Soil is wet
+    digitalWrite(BUZZER, LOW);
+    digitalWrite(pump, LOW);
+    Serial.println("Soil is dry. Turn on irrigation!.");
+  }
+
+  delay(500); // Wait for 2 seconds before next reading
+}
